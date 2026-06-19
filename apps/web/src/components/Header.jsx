@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Home, Package, Info, PhoneCall, Mail, Phone, Sparkles } from 'lucide-react';
+import { Menu, X, Home, Package, Info, PhoneCall, Mail, Phone, Sparkles, IndianRupee } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { ThemeToggle } from './ThemeToggle';
@@ -21,6 +21,7 @@ function Header() {
   const navLinks = [
     { name: 'Home', path: '/', description: 'Welcome to our enterprise platform', icon: Home },
     { name: 'Products', path: '/products', description: 'Explore our modular systems', icon: Package },
+    { name: 'Pricing', path: '/pricing', description: 'Plans & pricing for your clinic', icon: IndianRupee },
     { name: 'About', path: '/about', description: 'Our story, values, and leadership', icon: Info },
     { name: 'Contact', path: '/contact', description: 'Get in touch with our team', icon: PhoneCall }
   ];

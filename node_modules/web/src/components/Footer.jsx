@@ -79,8 +79,12 @@ function Footer() {
               <ul className="space-y-3">
                 <li>
                   <Link to="/products" className="text-sm text-secondary-foreground/70 hover:text-accent hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-1.5">
-                    <ArrowRight className="h-3 w-3 opacity-0 -ml-4 group-hover:opacity-100 transition-all" />
                     Products
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/pricing" className="text-sm text-secondary-foreground/70 hover:text-accent hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-1.5">
+                    Pricing
                   </Link>
                 </li>
                 <li>

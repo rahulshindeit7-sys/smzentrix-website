@@ -7,6 +7,7 @@ const HomePage = lazy(() => import('./pages/HomePage.jsx'));
 const ProductsPage = lazy(() => import('./pages/ProductsPage.jsx'));
 const AboutPage = lazy(() => import('./pages/AboutPage.jsx'));
 const ContactPage = lazy(() => import('./pages/ContactPage.jsx'));
+const PricingPage = lazy(() => import('./pages/PricingPage.jsx'));
 
 function LoadingFallback() {
   return (
@@ -27,6 +28,7 @@ function AnimatedRoutes() {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<HomePage />} />
         <Route path="/products" element={<ProductsPage />} />
+        <Route path="/pricing" element={<PricingPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="*" element={
