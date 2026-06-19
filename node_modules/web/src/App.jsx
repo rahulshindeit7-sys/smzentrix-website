@@ -8,6 +8,7 @@ const ProductsPage = lazy(() => import('./pages/ProductsPage.jsx'));
 const AboutPage = lazy(() => import('./pages/AboutPage.jsx'));
 const ContactPage = lazy(() => import('./pages/ContactPage.jsx'));
 const PricingPage = lazy(() => import('./pages/PricingPage.jsx'));
+const AdminPage = lazy(() => import('./pages/AdminPage.jsx'));
 
 function LoadingFallback() {
   return (
@@ -31,6 +32,7 @@ function AnimatedRoutes() {
         <Route path="/pricing" element={<PricingPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/admin" element={<AdminPage />} />
         <Route path="*" element={
           <div className="min-h-screen flex items-center justify-center bg-background">
             <div className="text-center">
