@@ -9,6 +9,8 @@ import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
 import FeatureCard from '@/components/FeatureCard.jsx';
 import DashboardMockup from '@/components/DashboardMockup.jsx';
+import StatsSection from '@/components/StatsSection.jsx';
+import FloatingCTA from '@/components/FloatingCTA.jsx';
 
 function HomePage() {
   const { scrollY } = useScroll();
@@ -72,6 +74,7 @@ function HomePage() {
       <Header />
 
       <main>
+        <FloatingCTA />
         <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden bg-background">
           <motion.div 
             style={{ y: y1, opacity: opacity1 }}
@@ -89,7 +92,7 @@ function HomePage() {
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               >
                 <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-8 leading-[1.1] tracking-tight text-balance">
-                  Enterprise solutions for <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent animate-pulse">healthcare</span> and retail
+                  Enterprise solutions for <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">healthcare</span> and retail
                 </h1>
                 <p className="text-xl md:text-2xl text-muted-foreground mb-10 leading-relaxed max-w-xl">
                   Reduce complexity and improve operations with software built for growing businesses.
@@ -105,6 +108,9 @@ function HomePage() {
                     <Link to="/products">View products</Link>
                   </Button>
                 </div>
+                <p className="mt-6 text-sm text-muted-foreground">
+                  ✓ No credit card required · ✓ Free demo · ✓ 9 specialties
+                </p>
               </motion.div>
 
               <motion.div 
@@ -125,6 +131,8 @@ function HomePage() {
             </div>
           </div>
         </section>
+
+        <StatsSection />
 
         <section className="py-24 bg-background relative">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -172,7 +180,7 @@ function HomePage() {
                   viewport={{ once: true, margin: "-100px" }} 
                   transition={{ duration: 0.7, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <div className={`grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-center ${index % 2 === 1 ? 'md:flex-row-reverse' : ''}`}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-center">
                     {index % 2 === 0 ? <>
                         <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-3xl p-16 flex items-center justify-center shadow-inner border border-border/50 group hover:shadow-premium transition-smooth">
                           <solution.icon className="h-32 w-32 text-primary group-hover:scale-110 transition-smooth" />
@@ -262,11 +270,17 @@ function HomePage() {
                   </AccordionItem>
                 ))}
               </Accordion>
+              <div className="text-center mt-10">
+                <p className="text-muted-foreground mb-4">Still have questions?</p>
+                <Button asChild variant="outline" className="rounded-xl">
+                  <Link to="/contact">Contact our team <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                </Button>
+              </div>
             </motion.div>
           </div>
         </section>
 
-        <section className="py-24 bg-primary text-primary-foreground relative overflow-hidden">
+        <section className="py-24 bg-primary text-primary-foreground relative overflow-hidden bg-noise">
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLW9wYWNpdHk9IjAuMSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-20" />
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
             <motion.div

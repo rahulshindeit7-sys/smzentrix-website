@@ -1,0 +1,130 @@
+import React from 'react';
+import { motion, useInView } from 'framer-motion';
+import { useRef, useState, useEffect } from 'react';
+import { Stethoscope, Cloud, MessageCircle, Monitor, ShieldCheck } from 'lucide-react';
+
+function AnimatedNumber({ value, suffix = '', inView }) {
+  const [display, setDisplay] = useState(0);
+
+  useEffect(() => {
+    if (!inView) return;
+    let start = 0;
+    const end = parseInt(value, 10);
+    if (isNaN(end)) return;
+    const duration = 1800;
+    const increment = end / (duration / 16);
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= end) {
+        setDisplay(end);
+        clearInterval(timer);
+      } else {
+        setDisplay(Math.floor(start));
+      }
+    }, 16);
+    return () => clearInterval(timer);
+  }, [value, inView]);
+
+  return <>{display}{suffix}</>;
+}
+
+const stats = [
+  {
+    icon: Stethoscope,
+    value: '9',
+    suffix: '',
+    label: 'Specialty Editions',
+    description: 'Purpose-built clinic solutions',
+    color: 'text-primary bg-primary/10 border-primary/20',
+  },
+  {
+    icon: Cloud,
+    value: '99.9',
+    suffix: '%',
+    label: 'Cloud Uptime',
+    description: 'Reliable & always available',
+    color: 'text-sky-500 bg-sky-500/10 border-sky-500/20',
+  },
+  {
+    icon: MessageCircle,
+    value: '',
+    suffix: '',
+    label: 'WhatsApp Integrated',
+    description: 'Prescriptions & reminders',
+    color: 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20',
+    isText: true,
+    displayText: '✓',
+  },
+  {
+    icon: Monitor,
+    value: '',
+    suffix: '',
+    label: 'Multi-Device Access',
+    description: 'Desktop, tablet & mobile',
+    color: 'text-violet-500 bg-violet-500/10 border-violet-500/20',
+    isText: true,
+    displayText: '✓',
+  },
+  {
+    icon: ShieldCheck,
+    value: '',
+    suffix: '',
+    label: 'Secure Platform',
+    description: 'Role-based access & backups',
+    color: 'text-amber-500 bg-amber-500/10 border-amber-500/20',
+    isText: true,
+    displayText: '✓',
+  },
+];
+
+function StatsSection() {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-80px' });
+
+  return (
+    <section ref={ref} className="py-16 bg-background relative">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.5 }}
+          className="max-w-6xl mx-auto"
+        >
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
+            {stats.map((stat, index) => {
+              const StatIcon = stat.icon;
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.08 }}
+                  className="group"
+                >
+                  <div className="relative flex flex-col items-center text-center p-5 md:p-6 rounded-2xl border border-border/40 bg-card/50 backdrop-blur-sm hover:shadow-premium hover:-translate-y-1 transition-smooth h-full">
+                    <div className={`flex h-11 w-11 items-center justify-center rounded-xl border ${stat.color} mb-3 group-hover:scale-110 transition-smooth`}>
+                      <StatIcon className="h-5 w-5" />
+                    </div>
+                    <div className="text-2xl md:text-3xl font-extrabold tracking-tight mb-0.5">
+                      {stat.isText ? (
+                        <span className="text-emerald-500">{stat.displayText}</span>
+                      ) : (
+                        <AnimatedNumber value={stat.value} suffix={stat.suffix} inView={isInView} />
+                      )}
+                    </div>
+                    <p className="text-sm font-bold text-foreground mb-0.5">{stat.label}</p>
+                    <p className="text-xs text-muted-foreground leading-snug">{stat.description}</p>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+export default StatsSection;

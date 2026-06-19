@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
+import FloatingCTA from '@/components/FloatingCTA.jsx';
 
 const formSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -67,7 +68,7 @@ function ContactPage() {
   ];
 
   return (
-    <>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
       <Helmet>
         <title>Contact Us - SM Zentrix</title>
         <meta name="description" content="Get in touch with SM Zentrix. Schedule a consultation, request a demo, or ask questions about our enterprise solutions." />
@@ -76,7 +77,9 @@ function ContactPage() {
       <Header />
 
       <main>
-        <section className="py-20 bg-gradient-to-br from-background via-background to-muted/30">
+        <FloatingCTA />
+        <section className="py-24 pt-32 bg-gradient-to-br from-background via-background to-muted/30 relative overflow-hidden">
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLW9wYWNpdHk9IjAuMDIiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-40 dark:opacity-20" />
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -84,7 +87,7 @@ function ContactPage() {
               transition={{ duration: 0.6 }}
               className="text-center mb-16"
             >
-              <h1 className="text-5xl md:text-6xl font-bold mb-6">Get in touch</h1>
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-8 tracking-tight leading-[1.1] text-balance">Get in touch</h1>
               <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
                 Ready to transform your operations? Let's discuss how SM Zentrix can help your business.
               </p>
@@ -97,7 +100,7 @@ function ContactPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
               >
-                <Card>
+                <Card className="border border-border/40 shadow-premium rounded-2xl overflow-hidden">
                   <CardHeader>
                     <CardTitle className="text-2xl">Send us a message</CardTitle>
                     <CardDescription>
@@ -178,7 +181,7 @@ function ContactPage() {
 
                       <Button
                         type="submit"
-                        className="w-full"
+                        className="w-full h-14 text-base font-semibold rounded-xl shadow-premium hover:shadow-premium-hover transition-smooth"
                         disabled={isSubmitting}
                       >
                         {isSubmitting ? (
@@ -213,7 +216,7 @@ function ContactPage() {
                         viewport={{ once: true }}
                         transition={{ duration: 0.4, delay: index * 0.1 }}
                       >
-                        <Card className="hover:shadow-lg transition-all duration-300">
+                        <Card className="hover:shadow-premium hover:-translate-y-1 transition-smooth">
                           <CardContent className="pt-6">
                             <div className="flex items-start space-x-4">
                               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 flex-shrink-0">
@@ -260,12 +263,26 @@ function ContactPage() {
                 </Card>
               </motion.div>
             </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mt-12 text-sm text-muted-foreground"
+            >
+              <span className="flex items-center gap-1.5">🔒 Your information is secure</span>
+              <span className="text-border">•</span>
+              <span className="flex items-center gap-1.5">⚡ We respond within 24 hours</span>
+              <span className="text-border">•</span>
+              <span className="flex items-center gap-1.5">🚫 No spam, ever</span>
+            </motion.div>
           </div>
         </section>
       </main>
 
       <Footer />
-    </>
+    </motion.div>
   );
 }
 

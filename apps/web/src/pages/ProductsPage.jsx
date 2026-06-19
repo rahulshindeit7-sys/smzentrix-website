@@ -10,6 +10,8 @@ import {
 } from 'lucide-react';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
+import StatsSection from '@/components/StatsSection.jsx';
+import FloatingCTA from '@/components/FloatingCTA.jsx';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -79,6 +81,14 @@ function ProductsPage() {
       accent: 'border-t-indigo-500 text-indigo-500 dark:text-indigo-400 bg-indigo-500/5',
       badgeColor: 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400',
       features: ['Seizure Management', 'Stroke Follow-up', 'Cranial Nerve Exam', 'EEG / EMG / NCV', 'CT / MRI Billing']
+    },
+    {
+      name: 'EyeCare OPD',
+      subtitle: 'Ophthalmology Clinics',
+      icon: Eye,
+      accent: 'border-t-emerald-500 text-emerald-500 dark:text-emerald-400 bg-emerald-500/5',
+      badgeColor: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
+      features: ['Visual Acuity', 'Refraction Records', 'Slit Lamp Examination', 'Fundus Examination', 'IOL Calculation']
     }
   ];
 
@@ -235,7 +245,7 @@ function ProductsPage() {
   ];
 
   return (
-    <>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
       <Helmet>
         <title>Specialty OPD Software Products - SM Zentrix</title>
         <meta name="description" content="Explore SM Zentrix OPD Editions: Complete Clinic Management Software for General Physicains, Dental, Pediatric, Cardiology, Gynecology, Dermatology, ENT, and Neurology practices." />
@@ -244,6 +254,7 @@ function ProductsPage() {
       <Header />
 
       <main className="overflow-hidden bg-background text-foreground">
+        <FloatingCTA />
         
         {/* HERO SECTION */}
         <section className="relative pt-24 pb-20 overflow-hidden bg-gradient-to-b from-primary/5 via-background to-background">
@@ -284,9 +295,16 @@ function ProductsPage() {
                   </a>
                 </Button>
               </div>
+              <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 mt-8 text-sm text-muted-foreground/80">
+                <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-emerald-500" />Free Demo</span>
+                <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-emerald-500" />No Credit Card</span>
+                <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-emerald-500" />9 Specialties</span>
+              </div>
             </motion.div>
           </div>
         </section>
+
+        <StatsSection />
 
         {/* SPECIALTY EDITIONS */}
         <section className="py-24 bg-muted/20 relative border-t border-border/30">
@@ -323,12 +341,12 @@ function ProductsPage() {
                           </div>
                         </div>
                         <CardTitle className="text-lg font-bold tracking-tight">{spec.name}</CardTitle>
-                        <CardDescription className="text-xs font-semibold leading-relaxed mt-1">{spec.subtitle}</CardDescription>
+                        <CardDescription className="text-sm font-semibold leading-relaxed mt-1">{spec.subtitle}</CardDescription>
                       </CardHeader>
                       <CardContent className="flex-grow">
                         <ul className="space-y-2.5">
                           {spec.features.map((feature, idx) => (
-                            <li key={idx} className="flex items-start space-x-2 text-xs text-foreground/80 font-medium">
+                            <li key={idx} className="flex items-start space-x-2 text-sm text-foreground/80 font-medium">
                               <Check className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0 bg-emerald-500/10 p-0.5 rounded-full" />
                               <span className="leading-snug">{feature}</span>
                             </li>
@@ -448,8 +466,8 @@ function ProductsPage() {
                       </div>
                       {/* Text */}
                       <div className="flex-1 space-y-1.5">
-                        <p className="text-sm font-bold text-foreground leading-snug">{feat.title}</p>
-                        <p className="text-xs text-muted-foreground leading-relaxed">{feat.description}</p>
+                        <p className="text-base font-bold text-foreground leading-snug">{feat.title}</p>
+                        <p className="text-sm text-muted-foreground leading-relaxed">{feat.description}</p>
                       </div>
                       {/* Specialty badge */}
                       {feat.specialty && (
@@ -496,7 +514,8 @@ function ProductsPage() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                   >
-                    <Card className="h-full text-center p-8 bg-card border border-border/40 hover:shadow-premium hover:-translate-y-1.5 transition-smooth rounded-2xl">
+                    <Card className={`h-full text-center p-8 bg-card border border-border/40 hover:shadow-premium hover:-translate-y-1.5 transition-smooth rounded-2xl ${index === 0 ? 'relative' : ''}`}>
+                      {index === 0 && <Badge className="absolute top-4 right-4 bg-primary/10 text-primary text-[10px]">Recommended</Badge>}
                       <div className={`mx-auto flex h-14 w-14 items-center justify-center rounded-2xl mb-6 shadow-inner ${deploy.accent}`}>
                         <DeployIcon className="h-7 w-7" />
                       </div>
@@ -526,19 +545,19 @@ function ProductsPage() {
                     </p>
                     <div className="space-y-3">
                       <a href="tel:+919011589198" className="flex items-center space-x-3 text-sm font-semibold text-foreground/90 hover:text-primary transition-smooth">
-                        <Phone className="h-4.5 w-4.5 text-primary" />
+                        <Phone className="h-[18px] w-[18px] text-primary" />
                         <span>+91 90115 89198</span>
                       </a>
                       <a href="tel:+918976318505" className="flex items-center space-x-3 text-sm font-semibold text-foreground/90 hover:text-primary transition-smooth">
-                        <Phone className="h-4.5 w-4.5 text-primary" />
+                        <Phone className="h-[18px] w-[18px] text-primary" />
                         <span>+91 89763 18505</span>
                       </a>
                       <a href="tel:+919011587977" className="flex items-center space-x-3 text-sm font-semibold text-foreground/90 hover:text-primary transition-smooth">
-                        <Phone className="h-4.5 w-4.5 text-primary" />
+                        <Phone className="h-[18px] w-[18px] text-primary" />
                         <span>+91 90115 87977</span>
                       </a>
                       <a href="https://smzentrix.info" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 text-sm font-semibold text-foreground/90 hover:text-primary transition-smooth">
-                        <Globe className="h-4.5 w-4.5 text-primary" />
+                        <Globe className="h-[18px] w-[18px] text-primary" />
                         <span>smzentrix.info</span>
                       </a>
                     </div>
@@ -559,7 +578,7 @@ function ProductsPage() {
       </main>
 
       <Footer />
-    </>
+    </motion.div>
   );
 }
 
