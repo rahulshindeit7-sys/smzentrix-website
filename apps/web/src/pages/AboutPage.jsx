@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,6 +7,8 @@ import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
 
 function AboutPage() {
+  const [imageLoadFailed, setImageLoadFailed] = useState({});
+
   const values = [
     {
       icon: Heart,
@@ -21,7 +23,7 @@ function AboutPage() {
     {
       icon: Shield,
       title: 'Reliability and trust',
-      description: 'Healthcare and retail businesses depend on our systems daily. We maintain 99.9% uptime and treat data security as non-negotiable.'
+      description: 'We focus on dependable software, responsible handling of data, and long-term trust built through consistent service quality.'
     },
     {
       icon: Users,
@@ -32,14 +34,25 @@ function AboutPage() {
 
   const team = [
     {
-      name: 'Sachin Mahadik',
-      role: 'Chief Executive Officer',
-      bio: 'Experienced healthcare professional with 10 years of expertise in patient care and healthcare management, committed to quality service and compassionate support.',
+      name: 'Dr.Deepali Rahul Shinde',
+      initials: 'DRS',
+      photo: '/leadership/dr-deepali-rahul-shinde.jpg',
+      role: 'Founder & Owner',
+      bio: 'Founder and Owner of SM Zentrix. She leads the company vision, customer trust, service quality, operations, and long-term growth. Her focus is to make digital solutions simple, affordable, and useful for doctors, clinics, and small businesses.',
+    },
+    {
+      name: 'Dr.Sachin Mahadik',
+      initials: 'SM',
+      photo: '/leadership/sachin-mahadik.jpg',
+      role: 'Founder & Chief Executive Officer',
+      bio: 'Experienced healthcare professional with 10 years of expertise in patient care and healthcare management, committed to quality service, smooth operations, and compassionate support.',
     },
     {
       name: 'Rahul Shinde',
-      role: 'Chief Technology Officer',
-      bio: 'Led engineering teams at Fortune 500 companies. Specializes in scalable enterprise architecture.'
+      initials: 'RS',
+      photo: '/leadership/rahul-shinde.jpg',
+      role: 'Founder & Chief Technology Officer',
+      bio: 'Leads product development, technology architecture, healthcare software solutions, deployment, and automation at SM Zentrix. He focuses on building reliable, scalable, and practical software products for clinics and businesses.'
     }
   ];
 
@@ -47,7 +60,7 @@ function AboutPage() {
     <>
       <Helmet>
         <title>About Us - SM Zentrix</title>
-        <meta name="description" content="Learn about SM Zentrix mission, vision, values, and team. We build enterprise software that reduces complexity for healthcare and retail businesses." />
+        <meta name="description" content="Learn the real story behind SM Zentrix and our mission to build practical, affordable, and reliable software for doctors, clinics, and small businesses." />
       </Helmet>
 
       <Header />
@@ -63,7 +76,7 @@ function AboutPage() {
             >
               <h1 className="text-5xl md:text-6xl font-bold mb-6">About SM Zentrix</h1>
               <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
-                Building software that makes complex operations simple
+                Founder-led software built to make everyday clinic and business operations simpler
               </p>
             </motion.div>
           </div>
@@ -78,19 +91,34 @@ function AboutPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
               >
-                <h2 className="text-4xl font-bold mb-6">Our story</h2>
+                <h2 className="text-4xl font-bold mb-6">Our Story</h2>
                 <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
                   <p>
-                    SM Zentrix was founded in 2018 by a team of healthcare IT professionals who were frustrated with the complexity and inefficiency of existing enterprise software. We saw clinics drowning in paperwork, hospitals struggling with disconnected systems, and retail businesses making decisions without proper data.
+                    SM Zentrix was born from a real journey, not just an idea.
                   </p>
                   <p>
-                    We started with a simple question: What if enterprise software actually made work easier instead of harder?
+                    <span className="font-semibold text-foreground">Rahul</span> and <span className="font-semibold text-foreground">Deepa</span>, a husband-and-wife team, always wanted to start their own business, but the right path was not clear in the beginning. The turning point came when <span className="font-semibold text-foreground">Deepa</span>&apos;s brother, <span className="font-semibold text-foreground">Sachin Mahadik</span>, encouraged them to take the first step and start their own firm.
                   </p>
                   <p>
-                    Today, we serve 2,847 organizations across healthcare and retail. Our clients range from single-location clinics to multi-facility hospital networks and retail chains. What they all have in common is a need for software that reduces complexity, not adds to it.
+                    With his experience in healthcare and clinic operations, <span className="font-semibold text-foreground">Sachin Mahadik</span> suggested that their first product should solve a real problem for doctors - a simple and practical OPD management application.
                   </p>
                   <p>
-                    We measure our success by the time our clients save, the errors they avoid, and the growth they achieve. When a clinic tells us they can now see 47% more patients without hiring additional staff, or a pharmacy reports processing prescriptions 2.8x faster, we know we are on the right track.
+                    That is how SM Zentrix began.
+                  </p>
+                  <p>
+                    Our first focus is to build a complete OPD solution that helps clinics manage appointments, patient records, prescriptions, billing, reports, follow-ups, and day-to-day operations smoothly.
+                  </p>
+                  <p>
+                    <span className="font-semibold text-foreground">Deepa</span> and <span className="font-semibold text-foreground">Sachin Mahadik</span> guide the product as business analysts with a strong understanding of real clinic workflows. Along with her product guidance, <span className="font-semibold text-foreground">Deepa</span> has also been <span className="font-semibold text-foreground">Rahul</span>&apos;s strongest support system throughout this journey. Her belief, patience, and constant motivation encouraged <span className="font-semibold text-foreground">Rahul</span> to aim higher, take bold decisions, and complete the first product of SM Zentrix.
+                  </p>
+                  <p>
+                    <span className="font-semibold text-foreground">Rahul</span> leads the technology, product development, architecture, and deployment.
+                  </p>
+                  <p>
+                    At SM Zentrix, our aim is simple: to create software that is easy to use, affordable, reliable, and genuinely useful for doctors, clinics, and small businesses.
+                  </p>
+                  <p>
+                    We are building this company step by step, with trust, practical thinking, and a strong belief that good software should reduce work - not increase it.
                   </p>
                 </div>
               </motion.div>
@@ -116,7 +144,7 @@ function AboutPage() {
                   </CardHeader>
                   <CardContent>
                     <p className="text-lg text-muted-foreground leading-relaxed">
-                      To become the most trusted enterprise software partner for healthcare and retail businesses worldwide. We envision a future where technology empowers professionals to focus on what matters most: caring for patients and serving customers.
+                      To become a trusted software partner for doctors, clinics, and growing businesses by solving real operational problems in a practical way.
                     </p>
                   </CardContent>
                 </Card>
@@ -137,7 +165,7 @@ function AboutPage() {
                   </CardHeader>
                   <CardContent>
                     <p className="text-lg text-muted-foreground leading-relaxed">
-                      To build enterprise software that reduces complexity, improves efficiency, and enables growth. We create solutions that are powerful enough for large organizations yet simple enough for small teams to adopt quickly.
+                      To build software that is simple to use, affordable to adopt, reliable in day-to-day work, and genuinely useful for real business and clinic workflows.
                     </p>
                   </CardContent>
                 </Card>
@@ -151,7 +179,7 @@ function AboutPage() {
             <div className="text-center mb-12">
               <h2 className="text-4xl font-bold mb-4">Our core values</h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                The principles that guide everything we do
+                Values that shape how we build, support, and grow with our clients
               </p>
             </div>
 
@@ -190,11 +218,11 @@ function AboutPage() {
             <div className="text-center mb-12">
               <h2 className="text-4xl font-bold mb-4">Meet our leadership team</h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Experienced professionals dedicated to your success
+                Meet the people behind SM Zentrix
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
               {team.map((member, index) => (
                 <motion.div
                   key={index}
@@ -202,13 +230,24 @@ function AboutPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className={index === 2 ? 'md:col-span-2 md:max-w-md md:mx-auto lg:col-span-1 lg:max-w-none' : ''}
                 >
                   <Card className="h-full hover:shadow-lg transition-all duration-300">
                     <CardContent className="pt-6">
-                      <div className="flex h-24 w-24 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 mx-auto mb-4">
-                        <span className="text-3xl font-bold text-primary">
-                          {member.name.split(' ').map(n => n[0]).join('')}
-                        </span>
+                      <div className="flex h-24 w-24 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 mx-auto mb-4 overflow-hidden">
+                        {member.photo && !imageLoadFailed[index] ? (
+                          <img
+                            src={member.photo}
+                            alt={`${member.name} portrait`}
+                            loading="lazy"
+                            className="h-full w-full object-cover"
+                            onError={() => setImageLoadFailed((prev) => ({ ...prev, [index]: true }))}
+                          />
+                        ) : (
+                          <span className="text-3xl font-bold text-primary">
+                            {member.initials}
+                          </span>
+                        )}
                       </div>
                       <h3 className="text-xl font-bold text-center mb-1">{member.name}</h3>
                       <p className="text-sm text-primary text-center mb-3">{member.role}</p>

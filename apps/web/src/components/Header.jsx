@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Home, Package, Lightbulb, Info, PhoneCall, Mail, Phone } from 'lucide-react';
+import { Menu, Home, Package, Briefcase, Info, PhoneCall, Mail, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { ThemeToggle } from './ThemeToggle';
@@ -10,13 +10,19 @@ function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   const navLinks = [
-    { name: 'Home', path: '/', description: 'Welcome to our enterprise platform', icon: Home },
+    { name: 'Home', path: '/', hash: '', description: 'Welcome to our enterprise platform', icon: Home },
     { name: 'Products', path: '/products', description: 'Explore our modular systems', icon: Package },
+    { name: 'Services', path: '/', hash: '#services', description: 'Custom web services and automation', icon: Briefcase },
     { name: 'About', path: '/about', description: 'Our story, values, and leadership', icon: Info },
     { name: 'Contact', path: '/contact', description: 'Get in touch with our team', icon: PhoneCall }
   ];
 
-  const isActive = (path) => location.pathname === path;
+  const isActive = (link) => {
+    if (typeof link.hash !== 'undefined') {
+      return location.pathname === link.path && location.hash === link.hash;
+    }
+    return location.pathname === link.path;
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 glass-panel transition-smooth">
@@ -32,10 +38,10 @@ function Header() {
           <nav className="hidden md:flex items-center space-x-2">
             {navLinks.map((link) => (
               <Link
-                key={link.path}
-                to={link.path}
+                key={`${link.path}${link.hash || ''}`}
+                to={link.hash ? `${link.path}${link.hash}` : link.path}
                 className={`px-4 py-2 text-sm font-medium rounded-lg transition-smooth hover:scale-105 ${
-                  isActive(link.path)
+                  isActive(link)
                     ? 'text-primary bg-primary/10 shadow-sm'
                     : 'text-foreground/80 hover:text-primary hover:bg-muted/80'
                 }`}
@@ -73,16 +79,16 @@ function Header() {
                       const LinkIcon = link.icon;
                       return (
                         <Link
-                          key={link.path}
-                          to={link.path}
+                          key={`${link.path}${link.hash || ''}`}
+                          to={link.hash ? `${link.path}${link.hash}` : link.path}
                           onClick={() => setIsOpen(false)}
                           className={`flex items-start space-x-4 p-4 rounded-2xl transition-smooth ${
-                            isActive(link.path)
+                            isActive(link)
                               ? 'bg-primary/10 text-primary shadow-sm border border-primary/10'
                               : 'text-foreground/80 hover:text-primary hover:bg-muted/80 hover:translate-x-1 border border-transparent'
                           }`}
                         >
-                          <div className={`p-2 rounded-xl ${isActive(link.path) ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'}`}>
+                          <div className={`p-2 rounded-xl ${isActive(link) ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'}`}>
                             <LinkIcon className="h-5 w-5" />
                           </div>
                           <div>

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { ArrowRight, Zap, Target, TrendingUp, Stethoscope, Building2, Cloud } from 'lucide-react';
+import { ArrowRight, Zap, Target, TrendingUp, Stethoscope, Building2, Cloud, Globe, Bot, CreditCard, CheckCircle2 } from 'lucide-react';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
 import FeatureCard from '@/components/FeatureCard.jsx';
@@ -54,6 +54,61 @@ function HomePage() {
     answer: 'You own your data. We provide full data export capabilities in standard formats and assist with migration if needed. No lock-in, no hidden fees.'
   }];
 
+  const services = [
+    {
+      icon: Stethoscope,
+      title: 'Custom Doctor Website',
+      description: 'We build professional, mobile-friendly and SEO-ready websites for doctors and clinics with appointment booking, WhatsApp enquiry, Google Maps, testimonials and online payment integration.',
+      features: [
+        'Doctor profile and clinic information',
+        'Online appointment booking',
+        'WhatsApp booking automation',
+        'SEO-ready pages',
+        'Google Maps and clinic location',
+        'Online payment gateway integration',
+        'Mobile and tablet responsive design',
+        'Fast and secure hosting setup'
+      ]
+    },
+    {
+      icon: Globe,
+      title: 'Clinic & Organization Website',
+      description: 'We create customized websites for clinics, hospitals, organizations, businesses and local service providers with modern design, enquiry forms and lead generation setup.',
+      features: [
+        'Custom website design',
+        'Contact and enquiry forms',
+        'Service pages',
+        'Gallery and testimonials',
+        'SEO setup',
+        'Domain and hosting support',
+        'Mobile responsive layout'
+      ]
+    },
+    {
+      icon: Bot,
+      title: 'WhatsApp Automation',
+      description: 'We help businesses automate customer communication using WhatsApp for appointment confirmation, enquiry handling, reminders and quick follow-ups.',
+      features: [
+        'WhatsApp booking button',
+        'Appointment confirmation message',
+        'Follow-up reminders',
+        'Prescription or document sharing support',
+        'Customer enquiry flow'
+      ]
+    },
+    {
+      icon: CreditCard,
+      title: 'Online Payment Gateway',
+      description: 'We integrate secure online payment gateways like Razorpay for appointment fees, consultation fees and service payments.',
+      features: [
+        'Razorpay integration',
+        'UPI/card/netbanking support',
+        'Payment success/failure page',
+        'Secure checkout flow'
+      ]
+    }
+  ];
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -100,6 +155,9 @@ function HomePage() {
                       Get started
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </Link>
+                  </Button>
+                  <Button asChild size="lg" variant="outline" className="text-lg h-14 px-8 hover:bg-muted/80 transition-smooth rounded-xl border-border/60">
+                    <Link to="/#services">View services</Link>
                   </Button>
                   <Button asChild size="lg" variant="outline" className="text-lg h-14 px-8 hover:bg-muted/80 transition-smooth rounded-xl border-border/60">
                     <Link to="/products">View products</Link>
@@ -204,6 +262,89 @@ function HomePage() {
                 </motion.div>
               ))}
             </div>
+          </div>
+        </section>
+
+        <section id="services" className="py-24 bg-background relative overflow-hidden scroll-mt-24">
+          <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
+          <div className="absolute -top-16 -right-24 w-80 h-80 rounded-full bg-accent/10 blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-20 -left-16 w-80 h-80 rounded-full bg-primary/10 blur-3xl pointer-events-none" />
+
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">Services</h2>
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                Premium website and automation services designed for clinics, healthcare teams, and growing businesses.
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+              {services.map((service, index) => (
+                <motion.div
+                  key={service.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-100px' }}
+                  transition={{ duration: 0.55, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                  className="group rounded-2xl border border-border/50 bg-card/70 backdrop-blur-sm shadow-sm hover:shadow-premium hover:-translate-y-1 transition-smooth"
+                >
+                  <div className="p-6 sm:p-7 border-b border-border/40">
+                    <div className="flex items-start gap-4">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-accent/15 text-primary shrink-0 group-hover:scale-105 transition-smooth">
+                        <service.icon className="h-6 w-6" />
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-bold tracking-tight mb-2">{service.title}</h3>
+                        <p className="text-muted-foreground leading-relaxed">{service.description}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-6 sm:p-7">
+                    <p className="text-sm font-semibold text-foreground mb-4 tracking-wide uppercase">Features</p>
+                    <ul className="space-y-3">
+                      {service.features.map((feature) => (
+                        <li key={feature} className="flex items-start gap-3 text-muted-foreground">
+                          <CheckCircle2 className="h-4 w-4 text-primary mt-1 shrink-0" />
+                          <span className="leading-relaxed">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              className="mt-14 max-w-5xl mx-auto rounded-3xl border border-border/50 bg-gradient-to-br from-primary/10 via-card to-accent/10 p-8 md:p-10 shadow-premium"
+            >
+              <div className="text-center">
+                <h3 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
+                  Need a website for your clinic or business?
+                </h3>
+                <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
+                  Get a customized website with booking, WhatsApp automation, SEO and payment gateway setup.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Button asChild size="lg" className="h-13 px-7 rounded-xl shadow-premium hover:shadow-premium-hover hover:-translate-y-0.5 transition-smooth">
+                    <Link to="/contact">Get Website Quote</Link>
+                  </Button>
+                  <Button asChild size="lg" variant="outline" className="h-13 px-7 rounded-xl border-border/60 hover:bg-muted/80 transition-smooth">
+                    <a href="https://wa.me/919011589198" target="_blank" rel="noreferrer">Discuss on WhatsApp</a>
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </section>
 
