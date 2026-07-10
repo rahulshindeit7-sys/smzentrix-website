@@ -66,6 +66,7 @@ async function isAdminAuthorized(req) {
   try {
     const verifyResponse = await fetch(ADMIN_AUTH_VERIFY_URL, {
       method: 'GET',
+      redirect: 'manual',
       headers: {
         cookie: req.headers.cookie || '',
         authorization: req.headers.authorization || '',
