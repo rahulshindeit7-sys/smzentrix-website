@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Target, Eye, Heart, Users, Lightbulb, Shield } from 'lucide-react';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
+import SeoMeta from '@/components/SeoMeta.jsx';
 
 function AboutPage() {
   const [imageLoadFailed, setImageLoadFailed] = useState({});
@@ -58,10 +58,11 @@ function AboutPage() {
 
   return (
     <>
-      <Helmet>
-        <title>About Us - SM Zentrix</title>
-        <meta name="description" content="Learn the real story behind SM Zentrix and our mission to build practical, affordable, and reliable software for doctors, clinics, and small businesses." />
-      </Helmet>
+      <SeoMeta
+        title="About Us - SM Zentrix"
+        description="Learn the real story behind SM Zentrix and our mission to build practical, affordable, and reliable software for doctors, clinics, and small businesses."
+        path="/about"
+      />
 
       <Header />
 

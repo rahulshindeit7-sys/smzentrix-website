@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { Helmet } from 'react-helmet';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,9 +9,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
-import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Star } from 'lucide-react';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
+import SeoMeta from '@/components/SeoMeta.jsx';
+import { fetchApprovedFeedbackFromApi, hasFeedbackApi, submitFeedbackToApi } from '@/lib/feedbackApi';
 
 const formSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -22,8 +23,20 @@ const formSchema = z.object({
   message: z.string().min(10, 'Message must be at least 10 characters')
 });
 
+const feedbackSchema = z.object({
+  clientName: z.string().min(2, 'Name must be at least 2 characters'),
+  clinicName: z.string().min(2, 'Clinic or company name is required'),
+  rating: z.coerce.number().min(1, 'Please select a rating').max(5),
+  feedback: z.string().min(15, 'Feedback must be at least 15 characters')
+});
+
+const FEEDBACK_STORAGE_KEY = 'sm-zentrix-client-feedback';
+
 function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isFeedbackSubmitting, setIsFeedbackSubmitting] = useState(false);
+  const [selectedRating, setSelectedRating] = useState(5);
+  const [feedbackList, setFeedbackList] = useState([]);
 
   const {
     register,
@@ -34,6 +47,59 @@ function ContactPage() {
     resolver: zodResolver(formSchema)
   });
 
+  const {
+    register: registerFeedback,
+    handleSubmit: handleFeedbackSubmit,
+    setValue: setFeedbackValue,
+    formState: { errors: feedbackErrors },
+    reset: resetFeedback
+  } = useForm({
+    resolver: zodResolver(feedbackSchema),
+    defaultValues: {
+      clientName: '',
+      clinicName: '',
+      rating: 5,
+      feedback: ''
+    }
+  });
+
+  useEffect(() => {
+    const loadFeedback = async () => {
+      if (hasFeedbackApi()) {
+        try {
+          const apiFeedback = await fetchApprovedFeedbackFromApi();
+          const normalizedApiFeedback = apiFeedback.map((item) => ({
+            id: item.id || `${item.clientName}-${item.createdAt || Date.now()}`,
+            clientName: item.clientName,
+            clinicName: item.clinicName,
+            rating: Number(item.rating || 5),
+            feedback: item.feedback,
+            createdAt: item.createdAt
+          }));
+          setFeedbackList(normalizedApiFeedback.slice(0, 12));
+          return;
+        } catch (error) {
+          console.error('Unable to load feedback from API:', error);
+        }
+      }
+
+      try {
+        const rawFeedback = localStorage.getItem(FEEDBACK_STORAGE_KEY);
+        if (!rawFeedback) {
+          return;
+        }
+
+        const parsedFeedback = JSON.parse(rawFeedback);
+        if (Array.isArray(parsedFeedback)) {
+          setFeedbackList(parsedFeedback);
+        }
+      } catch (error) {
+        console.error('Unable to read saved feedback:', error);
+      }
+    };
+
+    loadFeedback();
+  }, []);
   const onSubmit = async (data) => {
     setIsSubmitting(true);
     
@@ -43,6 +109,56 @@ function ContactPage() {
     toast.success('Message sent successfully. We will contact you within 24 hours.');
     reset();
     setIsSubmitting(false);
+  };
+
+  const onFeedbackSubmit = async (data) => {
+    setIsFeedbackSubmitting(true);
+
+    await new Promise((resolve) => setTimeout(resolve, 900));
+
+    const newEntry = {
+      id: Date.now(),
+      clientName: data.clientName,
+      clinicName: data.clinicName,
+      rating: data.rating,
+      feedback: data.feedback,
+      createdAt: new Date().toISOString(),
+      status: 'pending',
+      source: 'website'
+    };
+
+    if (hasFeedbackApi()) {
+      try {
+        await submitFeedbackToApi(newEntry);
+        toast.success('Thank you! Feedback submitted for admin approval.');
+        resetFeedback({
+          clientName: '',
+          clinicName: '',
+          rating: 5,
+          feedback: ''
+        });
+        setSelectedRating(5);
+        setIsFeedbackSubmitting(false);
+        return;
+      } catch (error) {
+        console.error('Unable to submit feedback to API:', error);
+        toast.error('API unavailable. Saving feedback locally for now.');
+      }
+    }
+
+    const updatedFeedbackList = [newEntry, ...feedbackList].slice(0, 12);
+    setFeedbackList(updatedFeedbackList);
+    localStorage.setItem(FEEDBACK_STORAGE_KEY, JSON.stringify(updatedFeedbackList));
+
+    toast.success('Thank you! Your feedback has been submitted.');
+    resetFeedback({
+      clientName: '',
+      clinicName: '',
+      rating: 5,
+      feedback: ''
+    });
+    setSelectedRating(5);
+    setIsFeedbackSubmitting(false);
   };
 
   const contactInfo = [
@@ -68,10 +184,11 @@ function ContactPage() {
 
   return (
     <>
-      <Helmet>
-        <title>Contact Us - SM Zentrix</title>
-        <meta name="description" content="Get in touch with SM Zentrix. Schedule a consultation, request a demo, or ask questions about our enterprise solutions." />
-      </Helmet>
+      <SeoMeta
+        title="Contact Us - SM Zentrix"
+        description="Get in touch with SM Zentrix. Schedule a consultation, request a demo, or ask questions about our enterprise solutions."
+        path="/contact"
+      />
 
       <Header />
 
@@ -256,6 +373,161 @@ function ContactPage() {
                     <p className="mt-4 text-sm opacity-90">
                       Professional and Enterprise clients receive 24/7 priority support
                     </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        <section id="customer-feedback" className="py-20 bg-background border-t border-border/40">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-14"
+            >
+              <h2 className="text-4xl md:text-5xl font-bold mb-4">Customer Feedback</h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Share your experience with SM Zentrix. Your feedback helps us improve and support more clinics better.
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 max-w-6xl mx-auto">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-2xl">Leave your feedback</CardTitle>
+                    <CardDescription>
+                      We value every client response.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <form onSubmit={handleFeedbackSubmit(onFeedbackSubmit)} className="space-y-5">
+                      <div>
+                        <Label htmlFor="clientName">Your Name *</Label>
+                        <Input
+                          id="clientName"
+                          type="text"
+                          placeholder="Dr. Aditi Patil"
+                          className="mt-1 text-foreground"
+                          {...registerFeedback('clientName')}
+                        />
+                        {feedbackErrors.clientName && (
+                          <p className="text-sm text-destructive mt-1">{feedbackErrors.clientName.message}</p>
+                        )}
+                      </div>
+
+                      <div>
+                        <Label htmlFor="clinicName">Clinic / Company *</Label>
+                        <Input
+                          id="clinicName"
+                          type="text"
+                          placeholder="Shree Clinic"
+                          className="mt-1 text-foreground"
+                          {...registerFeedback('clinicName')}
+                        />
+                        {feedbackErrors.clinicName && (
+                          <p className="text-sm text-destructive mt-1">{feedbackErrors.clinicName.message}</p>
+                        )}
+                      </div>
+
+                      <div>
+                        <Label className="mb-2 block">Rating *</Label>
+                        <div className="flex items-center gap-2">
+                          {[1, 2, 3, 4, 5].map((rating) => (
+                            <button
+                              key={rating}
+                              type="button"
+                              onClick={() => {
+                                setSelectedRating(rating);
+                                setFeedbackValue('rating', rating, { shouldValidate: true });
+                              }}
+                              className="rounded-md p-1 transition-colors hover:bg-muted"
+                              aria-label={`Rate ${rating} star${rating > 1 ? 's' : ''}`}
+                            >
+                              <Star
+                                className={`h-6 w-6 ${rating <= selectedRating ? 'fill-amber-400 text-amber-500' : 'text-muted-foreground'}`}
+                              />
+                            </button>
+                          ))}
+                        </div>
+                        <input type="hidden" {...registerFeedback('rating')} value={selectedRating} />
+                        {feedbackErrors.rating && (
+                          <p className="text-sm text-destructive mt-1">{feedbackErrors.rating.message}</p>
+                        )}
+                      </div>
+
+                      <div>
+                        <Label htmlFor="feedback">Feedback *</Label>
+                        <Textarea
+                          id="feedback"
+                          rows={5}
+                          placeholder="Tell us what worked well and what we can improve."
+                          className="mt-1 text-foreground"
+                          {...registerFeedback('feedback')}
+                        />
+                        {feedbackErrors.feedback && (
+                          <p className="text-sm text-destructive mt-1">{feedbackErrors.feedback.message}</p>
+                        )}
+                      </div>
+
+                      <Button type="submit" className="w-full" disabled={isFeedbackSubmitting}>
+                        {isFeedbackSubmitting ? 'Submitting...' : 'Submit Feedback'}
+                      </Button>
+                    </form>
+                  </CardContent>
+                </Card>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                <Card className="h-full">
+                  <CardHeader>
+                    <CardTitle className="text-2xl">Recent client feedback</CardTitle>
+                    <CardDescription>
+                      Latest feedback submitted by clients.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {feedbackList.length === 0 ? (
+                      <p className="text-muted-foreground">
+                        No feedback yet. Be the first client to share your experience.
+                      </p>
+                    ) : (
+                      <div className="space-y-4 max-h-[580px] overflow-auto pr-1">
+                        {feedbackList.map((item) => (
+                          <div key={item.id} className="rounded-xl border border-border/60 p-4 bg-muted/20">
+                            <div className="flex items-start justify-between gap-3 mb-2">
+                              <div>
+                                <p className="font-semibold text-foreground">{item.clientName}</p>
+                                <p className="text-sm text-muted-foreground">{item.clinicName}</p>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                {[1, 2, 3, 4, 5].map((value) => (
+                                  <Star
+                                    key={value}
+                                    className={`h-4 w-4 ${value <= item.rating ? 'fill-amber-400 text-amber-500' : 'text-muted-foreground/50'}`}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                            <p className="text-sm leading-relaxed text-foreground/90">{item.feedback}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </motion.div>

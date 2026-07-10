@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SM Zentrix CMS</title>
+  <style>
+    :root {
+      --bg: #f3f6f8;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #55637a;
+      --line: #d9e1e8;
+      --brand: #0f766e;
+      --danger: #b91c1c;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Segoe UI, Arial, sans-serif; background: var(--bg); color: var(--text); }
+    header { background: #fff; border-bottom: 1px solid var(--line); padding: 16px 24px; }
+    header h1 { margin: 0; font-size: 22px; }
+    main { max-width: 1200px; margin: 20px auto; padding: 0 16px 40px; display: grid; gap: 16px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+    .grid { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .full { grid-column: 1 / -1; }
+    label { font-size: 13px; font-weight: 600; color: var(--muted); display: block; margin-bottom: 6px; }
+    input, textarea, select { width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; font: inherit; }
+    textarea { min-height: 90px; resize: vertical; }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; }
+    button { border: 0; border-radius: 8px; padding: 10px 12px; cursor: pointer; font-weight: 600; }
+    .btn { background: var(--brand); color: #fff; }
+    .btn-soft { background: #e8f3f2; color: #0b4e48; }
+    .btn-danger { background: #fee2e2; color: var(--danger); }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { padding: 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { font-size: 12px; text-transform: uppercase; color: var(--muted); }
+    .status { padding: 4px 8px; border-radius: 99px; font-size: 12px; font-weight: 700; display: inline-block; }
+    .draft { background: #e2e8f0; color: #334155; }
+    .published { background: #dcfce7; color: #166534; }
+    .archived { background: #fee2e2; color: #991b1b; }
+    .muted { color: var(--muted); font-size: 13px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>SM Zentrix CMS - Doctor Website Showcase</h1>
+  </header>
+
+  <main>
+    <section class="card">
+      <div class="row" style="justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <strong>API Settings</strong>
+      </div>
+      <div class="grid">
+        <div>
+          <label for="apiBase">API Base URL</label>
+          <input id="apiBase" value="/api" />
+        </div>
+        <div>
+          <label for="apiKey">Admin API Key (optional fallback)</label>
+          <input id="apiKey" type="password" placeholder="Leave empty if session login is active" />
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 style="margin-top:0;">Add / Update Showcase</h2>
+      <div class="grid">
+        <div>
+          <label>Title</label>
+          <input id="title" placeholder="Dr. Patil Clinic Website" />
+        </div>
+        <div>
+          <label>Doctor Name</label>
+          <input id="doctorName" placeholder="Dr. Aditi Patil" />
+        </div>
+        <div>
+          <label>Specialty</label>
+          <input id="specialty" placeholder="Gynecology" />
+        </div>
+        <div>
+          <label>City</label>
+          <input id="city" placeholder="Satara" />
+        </div>
+        <div>
+          <label>Website URL</label>
+          <input id="websiteUrl" placeholder="https://..." />
+        </div>
+        <div>
+          <label>Thumbnail URL</label>
+          <input id="thumbnailUrl" placeholder="https://..." />
+        </div>
+        <div class="full">
+          <label>Summary</label>
+          <textarea id="summary" placeholder="Short project summary"></textarea>
+        </div>
+        <div>
+          <label>Tags (comma separated)</label>
+          <input id="tags" placeholder="appointment, seo, whatsapp" />
+        </div>
+        <div>
+          <label>Sort Order</label>
+          <input id="sortOrder" type="number" value="100" />
+        </div>
+        <div>
+          <label>Status</label>
+          <select id="status">
+            <option value="draft">draft</option>
+            <option value="published">published</option>
+            <option value="archived">archived</option>
+          </select>
+        </div>
+        <div>
+          <label>Featured</label>
+          <select id="featured">
+            <option value="false">No</option>
+            <option value="true">Yes</option>
+          </select>
+        </div>
+      </div>
+      <div class="row" style="margin-top:12px;">
+        <button class="btn" id="saveBtn">Create Showcase</button>
+        <button class="btn-soft" id="clearBtn">Clear Form</button>
+        <span class="muted" id="formStatus"></span>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="row" style="justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <h2 style="margin:0;">Showcase Items</h2>
+        <div class="row">
+          <select id="filterStatus">
+            <option value="all">all</option>
+            <option value="draft">draft</option>
+            <option value="published">published</option>
+            <option value="archived">archived</option>
+          </select>
+          <button class="btn-soft" id="refreshBtn">Refresh</button>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Project</th>
+            <th>Status</th>
+            <th>Sort</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    const state = { editId: null, items: [] };
+
+    const el = (id) => document.getElementById(id);
+    const headers = () => {
+      const key = el('apiKey').value.trim();
+      const h = { 'Content-Type': 'application/json' };
+      if (key) h['x-api-key'] = key;
+      return h;
+    };
+    const apiBase = () => (el('apiBase').value || '/api').replace(/\/$/, '');
+
+    function readForm() {
+      return {
+        title: el('title').value.trim(),
+        doctorName: el('doctorName').value.trim(),
+        specialty: el('specialty').value.trim(),
+        city: el('city').value.trim(),
+        websiteUrl: el('websiteUrl').value.trim(),
+        thumbnailUrl: el('thumbnailUrl').value.trim(),
+        summary: el('summary').value.trim(),
+        tags: el('tags').value.split(',').map((s) => s.trim()).filter(Boolean),
+        sortOrder: Number(el('sortOrder').value || 100),
+        status: el('status').value,
+        featured: el('featured').value === 'true'
+      };
+    }
+
+    function fillForm(item) {
+      el('title').value = item.title || '';
+      el('doctorName').value = item.doctorName || '';
+      el('specialty').value = item.specialty || '';
+      el('city').value = item.city || '';
+      el('websiteUrl').value = item.websiteUrl || '';
+      el('thumbnailUrl').value = item.thumbnailUrl || '';
+      el('summary').value = item.summary || '';
+      el('tags').value = (item.tags || []).join(', ');
+      el('sortOrder').value = item.sortOrder ?? 100;
+      el('status').value = item.status || 'draft';
+      el('featured').value = item.featured ? 'true' : 'false';
+      state.editId = item.id;
+      el('saveBtn').textContent = 'Update Showcase';
+      el('formStatus').textContent = `Editing item #${item.id}`;
+    }
+
+    function clearForm() {
+      ['title','doctorName','specialty','city','websiteUrl','thumbnailUrl','summary','tags'].forEach((id) => el(id).value = '');
+      el('sortOrder').value = 100;
+      el('status').value = 'draft';
+      el('featured').value = 'false';
+      state.editId = null;
+      el('saveBtn').textContent = 'Create Showcase';
+      el('formStatus').textContent = '';
+    }
+
+    async function saveItem() {
+      const payload = readForm();
+      const url = state.editId ? `${apiBase()}/admin/showcase/${state.editId}` : `${apiBase()}/admin/showcase`;
+      const method = state.editId ? 'PATCH' : 'POST';
+
+      const res = await fetch(url, { method, headers: headers(), body: JSON.stringify(payload) });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || 'Failed to save showcase item');
+      }
+
+      clearForm();
+      await loadItems();
+    }
+
+    async function setStatus(id, status) {
+      const res = await fetch(`${apiBase()}/admin/showcase/${id}/status`, {
+        method: 'PATCH',
+        headers: headers(),
+        body: JSON.stringify({ status })
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || 'Status update failed');
+      }
+      await loadItems();
+    }
+
+    async function removeItem(id) {
+      const ok = confirm('Delete this showcase item?');
+      if (!ok) return;
+      const res = await fetch(`${apiBase()}/admin/showcase/${id}`, {
+        method: 'DELETE',
+        headers: headers()
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || 'Delete failed');
+      }
+      await loadItems();
+    }
+
+    function renderRows() {
+      const tbody = el('rows');
+      tbody.innerHTML = '';
+
+      if (state.items.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="muted">No showcase items found</td></tr>';
+        return;
+      }
+
+      for (const item of state.items) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <strong>${item.title}</strong><br/>
+            <span class="muted">${item.doctorName} · ${item.specialty} · ${item.city}</span><br/>
+            <a href="${item.websiteUrl}" target="_blank" rel="noreferrer">${item.websiteUrl}</a>
+          </td>
+          <td><span class="status ${item.status}">${item.status}</span></td>
+          <td>${item.sortOrder ?? 100}${item.featured ? ' · featured' : ''}</td>
+          <td>
+            <div class="row">
+              <button class="btn-soft" data-action="edit">Edit</button>
+              <button class="btn-soft" data-action="publish">Publish</button>
+              <button class="btn-soft" data-action="draft">Draft</button>
+              <button class="btn-soft" data-action="archive">Archive</button>
+              <button class="btn-danger" data-action="delete">Delete</button>
+            </div>
+          </td>
+        `;
+
+        tr.querySelector('[data-action="edit"]').onclick = () => fillForm(item);
+        tr.querySelector('[data-action="publish"]').onclick = () => setStatus(item.id, 'published');
+        tr.querySelector('[data-action="draft"]').onclick = () => setStatus(item.id, 'draft');
+        tr.querySelector('[data-action="archive"]').onclick = () => setStatus(item.id, 'archived');
+        tr.querySelector('[data-action="delete"]').onclick = () => removeItem(item.id);
+        tbody.appendChild(tr);
+      }
+    }
+
+    async function loadItems() {
+      const status = el('filterStatus').value;
+      const res = await fetch(`${apiBase()}/admin/showcase?status=${status}`, { headers: headers() });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || 'Unable to load showcase list');
+      }
+      state.items = await res.json();
+      renderRows();
+    }
+
+    async function safeRun(fn) {
+      try {
+        await fn();
+        el('formStatus').textContent = 'Saved successfully';
+      } catch (err) {
+        el('formStatus').textContent = err.message || 'Operation failed';
+      }
+    }
+
+    el('saveBtn').onclick = () => safeRun(saveItem);
+    el('clearBtn').onclick = clearForm;
+    el('refreshBtn').onclick = () => safeRun(loadItems);
+    el('filterStatus').onchange = () => safeRun(loadItems);
+
+    safeRun(loadItems);
+  </script>
+</body>
+</html>

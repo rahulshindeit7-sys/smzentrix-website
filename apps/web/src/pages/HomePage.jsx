@@ -1,5 +1,4 @@
-import React from 'react';
-import { Helmet } from 'react-helmet';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -9,11 +8,27 @@ import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
 import FeatureCard from '@/components/FeatureCard.jsx';
 import DashboardMockup from '@/components/DashboardMockup.jsx';
+import SeoMeta from '@/components/SeoMeta.jsx';
+import { fetchPublishedShowcase } from '@/lib/showcaseApi';
 
 function HomePage() {
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 1000], [0, 200]);
   const opacity1 = useTransform(scrollY, [0, 500], [1, 0]);
+  const [showcaseItems, setShowcaseItems] = useState([]);
+
+  useEffect(() => {
+    const loadShowcase = async () => {
+      try {
+        const items = await fetchPublishedShowcase();
+        setShowcaseItems(items);
+      } catch (error) {
+        console.error('Unable to load showcase items:', error);
+      }
+    };
+
+    loadShowcase();
+  }, []);
 
   const valueProps = [{
     icon: Zap,
@@ -116,13 +131,11 @@ function HomePage() {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <Helmet>
-        <title>SM Zentrix - Enterprise Solutions for Healthcare & Retail</title>
-        <meta name="description" content="Reduce complexity and improve operations with SM Zentrix enterprise software. OPD management, healthcare ERP, retail solutions, and custom automation for growing businesses." />
-        <meta property="og:title" content="SM Zentrix - Enterprise Solutions for Healthcare & Retail" />
-        <meta property="og:description" content="Reduce complexity and improve operations with SM Zentrix enterprise software." />
-        <meta property="og:type" content="website" />
-      </Helmet>
+      <SeoMeta
+        title="SM Zentrix - Enterprise Solutions for Healthcare & Retail"
+        description="Reduce complexity and improve operations with SM Zentrix enterprise software. OPD management, healthcare ERP, retail solutions, and custom automation for growing businesses."
+        path="/"
+      />
 
       <Header />
 
@@ -202,6 +215,73 @@ function HomePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
               {valueProps.map((prop, index) => <FeatureCard key={index} feature={prop} index={index} />)}
             </div>
+          </div>
+        </section>
+
+        <section className="py-24 bg-muted/20 relative border-t border-border/40">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className="text-center mb-14"
+            >
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">Doctor Website Showcase</h2>
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                Websites designed and delivered by SM Zentrix for real clinics.
+              </p>
+            </motion.div>
+
+            {showcaseItems.length === 0 ? (
+              <div className="max-w-4xl mx-auto rounded-2xl border border-dashed border-border/70 bg-background p-10 text-center">
+                <p className="text-muted-foreground">
+                  Showcase will appear here once published from admin CMS.
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 max-w-7xl mx-auto">
+                {showcaseItems.map((item) => (
+                  <motion.article
+                    key={item.id}
+                    initial={{ opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-80px' }}
+                    transition={{ duration: 0.5 }}
+                    className="rounded-2xl border border-border/50 bg-card/80 shadow-sm hover:shadow-premium hover:-translate-y-1 transition-smooth overflow-hidden"
+                  >
+                    <div className="aspect-[16/9] bg-muted/40">
+                      {item.thumbnailUrl ? (
+                        <img src={item.thumbnailUrl} alt={item.title} className="h-full w-full object-cover" loading="lazy" />
+                      ) : (
+                        <div className="h-full w-full flex items-center justify-center text-muted-foreground text-sm">
+                          No preview image
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-5">
+                      <h3 className="text-xl font-bold mb-2 tracking-tight">{item.title}</h3>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        {item.doctorName} · {item.specialty} · {item.city}
+                      </p>
+                      <p className="text-sm text-foreground/90 leading-relaxed mb-4">{item.summary}</p>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {(item.tags || []).map((tag) => (
+                          <span key={tag} className="text-xs px-2.5 py-1 rounded-full bg-primary/10 text-primary font-medium">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                      <Button asChild variant="outline" className="w-full rounded-xl border-border/60">
+                        <a href={item.websiteUrl} target="_blank" rel="noreferrer">
+                          Visit Website
+                        </a>
+                      </Button>
+                    </div>
+                  </motion.article>
+                ))}
+              </div>
+            )}
           </div>
         </section>
 

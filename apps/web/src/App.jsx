@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from 'react';
 import { Route, Routes, BrowserRouter as Router, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import ScrollToTop from './components/ScrollToTop';
+import FloatingContactButtons from './components/FloatingContactButtons';
 
 const HomePage = lazy(() => import('./pages/HomePage.jsx'));
 const ProductsPage = lazy(() => import('./pages/ProductsPage.jsx'));
@@ -47,6 +48,7 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
+      <FloatingContactButtons />
       <Suspense fallback={<LoadingFallback />}>
         <AnimatedRoutes />
       </Suspense>

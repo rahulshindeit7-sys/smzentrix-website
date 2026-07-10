@@ -1,5 +1,4 @@
 import React from 'react';
-import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
 import { 
   Stethoscope, Baby, Heart, Brain, Smile, Sparkles, Eye, Activity, 
@@ -13,6 +12,7 @@ import Footer from '@/components/Footer.jsx';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import SeoMeta from '@/components/SeoMeta.jsx';
 
 function ProductsPage() {
   const specialties = [
@@ -236,10 +236,11 @@ function ProductsPage() {
 
   return (
     <>
-      <Helmet>
-        <title>Specialty OPD Software Products - SM Zentrix</title>
-        <meta name="description" content="Explore SM Zentrix OPD Editions: Complete Clinic Management Software for General Physicains, Dental, Pediatric, Cardiology, Gynecology, Dermatology, ENT, and Neurology practices." />
-      </Helmet>
+      <SeoMeta
+        title="Specialty OPD Software Products - SM Zentrix"
+        description="Explore SM Zentrix OPD Editions: Complete Clinic Management Software for General Physicians, Dental, Pediatric, Cardiology, Gynecology, Dermatology, ENT, and Neurology practices."
+        path="/products"
+      />
 
       <Header />
 
